@@ -12,21 +12,26 @@ FROM $BASE_CONTAINER
 MAINTAINER Paul Nilsson
 USER root
 
+# Tag for selecting the dask version
+ARG DASK_VERSION
+
+# Tag for selecting a package to be pip installed (e.g. dask-ml[complete])
+ARG PACKAGE
+
+# Python version
 ARG python=3.9
-ARG release
 
 SHELL ["/bin/bash", "-c"]
 
 ENV PATH /opt/conda/bin:$PATH
 ENV PYTHON_VERSION=${python}
-ENV DASK_VERSION=${release}
 
 RUN mamba install -y \
     "mamba>=0.27.0" \
     python=${PYTHON_VERSION} \
     nomkl \
     cmake \
-    dask=${DASK_VERSION} \
+    dask=$DASK_VERSION \
     cachey \
     streamz \
     numpy==1.24.3 \
