@@ -8,6 +8,12 @@
 
 FROM continuumio/miniconda3:22.11.1
 
+# Tag for selecting the dask version
+ARG DASK_VERSION
+
+# Tag for selecting a package to be pip installed (e.g. dask-ml[complete])
+ARG PACKAGE
+
 MAINTAINER Paul Nilsson
 USER root
 
@@ -16,7 +22,7 @@ RUN conda install --yes \
     python==3.9 \
     python-blosc \
     cytoolz \
-    dask==2023.3.2 \
+    dask==$DASK_VERSION \
     lz4 \
     nomkl \
     numpy==1.24.3 \
@@ -28,6 +34,9 @@ RUN conda install --yes \
     && find /opt/conda/ -type f,l -name '*.js.map' -delete \
     && find /opt/conda/lib/python*/site-packages/bokeh/server/static -type f,l -name '*.js' -not -name '*.min.js' -delete \
     && rm -rf /opt/conda/pkgs
+
+# install optional package
+RUN if [[ -z "$PACKAGE" ]] ; then echo No additional package ; else python3 -m pip install --no-cache-dir $PACKAGE ; fi
 
 COPY prepare.sh /usr/bin/prepare.sh
 RUN mkdir /opt/app
