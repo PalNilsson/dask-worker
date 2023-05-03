@@ -54,10 +54,10 @@ ARG DASK_SCHEDULER_IP
 ARG DASK_SHARED_FILESYSTEM_PATH
 
 # Activate the environment, and make sure it's activated:
-#RUN conda init bash
-#COPY environment.yml /opt/app/.
-#RUN conda env create -f /opt/app/environment.yml
-#RUN activate myenv
+RUN conda init bash
+COPY environment.yml /opt/app/.
+RUN conda env create -f /opt/app/environment.yml
+RUN activate myenv
 
 RUN chmod +x /usr/bin/prepare.sh
 
