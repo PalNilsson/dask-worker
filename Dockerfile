@@ -16,7 +16,7 @@ USER root
 ARG DASK_VERSION
 
 # Tag for selecting a package to be pip installed (e.g. dask-ml[complete])
-ARG PACKAGE
+#ARG PACKAGE
 
 # Python version
 ARG python=3.9
@@ -44,7 +44,8 @@ RUN mamba install -y \
     && rm -rf /opt/conda/pkgs
 
 # install optional package
-RUN if [[ -z "$PACKAGE" ]] ; then echo No additional package ; else python3 -m pip install --no-cache-dir $PACKAGE ; fi
+#RUN if [[ -z "$PACKAGE" ]] ; then echo No additional package ; else python3 -m pip install --no-cache-dir $PACKAGE ; fi
+# RUN python3 -m pip install --no-cache-dir dask-ml[complete]
 
 COPY prepare.sh /usr/bin/prepare.sh
 RUN mkdir /opt/app
