@@ -6,29 +6,32 @@
 # Authors:
 # - Paul Nilsson, paul.nilsson@cern.ch, 2023
 
-FROM continuumio/miniconda3:22.11.1
-
-# Tag for selecting the dask version
-ARG DASK_VERSION
-
-# Tag for selecting a package to be pip installed (e.g. dask-ml[complete])
-ARG PACKAGE
+ARG BASE_CONTAINER=condaforge/mambaforge:latest
+FROM $BASE_CONTAINER
 
 MAINTAINER Paul Nilsson
 USER root
 
-RUN conda install --yes \
-    -c conda-forge \
-    python==3.9 \
-    python-blosc \
-    cytoolz \
-    dask==$DASK_VERSION \
-    lz4 \
+ARG python=3.9
+ARG release
+
+SHELL ["/bin/bash", "-c"]
+
+ENV PATH /opt/conda/bin:$PATH
+ENV PYTHON_VERSION=${python}
+ENV DASK_VERSION=${release}
+
+RUN mamba install -y \
+    "mamba>=0.27.0" \
+    python=${PYTHON_VERSION} \
     nomkl \
+    cmake \
+    dask=${DASK_VERSION} \
+    cachey \
+    streamz \
     numpy==1.24.3 \
     pandas==2.0.1 \
-    tini==0.19.0 \
-    && conda clean -tipsy \
+    && mamba clean -tipy \
     && find /opt/conda/ -type f,l -name '*.a' -delete \
     && find /opt/conda/ -type f,l -name '*.pyc' -delete \
     && find /opt/conda/ -type f,l -name '*.js.map' -delete \
@@ -46,10 +49,11 @@ ARG DASK_SCHEDULER_IP
 ARG DASK_SHARED_FILESYSTEM_PATH
 
 # Activate the environment, and make sure it's activated:
-RUN conda init bash
-COPY environment.yml /opt/app/.
-RUN conda env create -f /opt/app/environment.yml
-RUN activate myenv
+#RUN conda init bash
+#COPY environment.yml /opt/app/.
+#RUN conda env create -f /opt/app/environment.yml
+#RUN activate myenv
 
-# Execute the prepare script which starts the dask worker
+RUN chmod +x /usr/bin/prepare.sh
+
 ENTRYPOINT ["tini", "-g", "--", "/usr/bin/prepare.sh"]
