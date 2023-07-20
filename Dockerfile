@@ -4,7 +4,7 @@
 # http://www.apache.org/licenses/LICENSE-2.0
 #
 # Authors:
-# - Paul Nilsson, paul.nilsson@cern.ch, 2023
+# - Paul Nilsson, paul.nilsson@cern.ch, 2021-2023
 
 ARG BASE_CONTAINER=condaforge/mambaforge:latest
 FROM $BASE_CONTAINER
@@ -19,7 +19,7 @@ ARG DASK_VERSION
 #ARG PACKAGE
 
 # Python version
-ARG python=3.9
+ARG python=3.10
 
 SHELL ["/bin/bash", "-c"]
 
@@ -34,8 +34,9 @@ RUN mamba install -y \
     dask=$DASK_VERSION \
     cachey \
     streamz \
-    numpy==1.24.3 \
-    pandas==2.0.1 \
+    numpy=1.24.4 \
+    pandas=2.0.1 \
+    tornado=6.3.2 \
     && mamba clean -tipy \
     && find /opt/conda/ -type f,l -name '*.a' -delete \
     && find /opt/conda/ -type f,l -name '*.pyc' -delete \
