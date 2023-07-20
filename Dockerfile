@@ -19,7 +19,7 @@ ARG DASK_VERSION
 #ARG PACKAGE
 
 # Python version
-ARG python=3.10
+ARG python=3.10.6
 
 SHELL ["/bin/bash", "-c"]
 
