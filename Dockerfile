@@ -37,7 +37,7 @@ RUN mamba install -y \
     numpy=1.24.4 \
     pandas=2.0.1 \
     tornado=6.3.2 \
-    root=6.26 \
+    root=6.28 \
     && mamba clean -tipy \
     && find /opt/conda/ -type f,l -name '*.a' -delete \
     && find /opt/conda/ -type f,l -name '*.pyc' -delete \
